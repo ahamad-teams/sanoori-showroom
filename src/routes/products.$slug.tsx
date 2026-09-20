@@ -1,0 +1,14 @@
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ArrowLeft, ImageOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useSite } from "@/components/site-shell";
+import { categories, products } from "@/lib/site-content";
+
+export const Route = createFileRoute("/products/$slug")({
+  loader: ({ params }) => { const product = products.find((item) => item.slug === params.slug); if (!product) throw notFound(); return product; },
+  head: ({ loaderData, params }) => { const title = loaderData ? `${loaderData.name.en} | Sanoori Trading` : "Product unavailable | Sanoori Trading"; const description = loaderData?.description.en ?? "This Sanoori Trading product is currently unavailable."; return { meta: [{ title }, { name: "description", content: description }, { property: "og:title", content: title }, { property: "og:description", content: description }, { property: "og:type", content: "product" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:url", content: `/products/${params.slug}` }, ...(!loaderData ? [{ name: "robots", content: "noindex" }] : [])], links: [{ rel: "canonical", href: `/products/${params.slug}` }] }; },
+  notFoundComponent: ProductNotFound,
+  component: ProductPage,
+});
+function ProductNotFound(){const {language}=useSite();const bn=language==="bn";return <section className="section-shell flex min-h-[65vh] items-center justify-center py-20 text-center"><div><ImageOff className="mx-auto size-10 text-gold"/><h1 className="page-title mt-5">{bn?"পণ্যটি পাওয়া যায়নি":"Product unavailable"}</h1><p className="mt-4 text-muted-foreground">{bn?"পণ্যটি সরানো হয়েছে অথবা এখনো প্রকাশ করা হয়নি।":"This product may have moved or has not been published yet."}</p><Button asChild className="mt-8"><Link to="/products" search={{category:"all",q:""}}><ArrowLeft/>{bn?"পণ্যসমূহে ফিরুন":"Back to products"}</Link></Button></div></section>}
+function ProductPage(){const product=Route.useLoaderData();const {language}=useSite();const category=categories.find((item)=>item.id===product.category);return <section className="section-shell py-14 sm:py-20"><Link to="/products" search={{category:"all",q:""}} className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold"><ArrowLeft className="size-4"/>{language==="bn"?"পণ্যসমূহ":"Products"}</Link><div className="mt-8 grid gap-10 lg:grid-cols-2"><div className="grid min-h-96 place-items-center bg-secondary"><ImageOff className="size-10 text-muted-foreground"/><span className="sr-only">Image unavailable</span></div><div><p className="eyebrow">{category?.label[language]}</p><h1 className="page-title mt-4">{product.name[language]}</h1><p className="mt-6 leading-8 text-muted-foreground">{product.description[language]}</p><Button asChild variant="gold" size="lg" className="mt-8"><Link to="/contact">{language==="bn"?"পণ্য কিনতে যোগাযোগ করুন":"Contact to buy"}</Link></Button></div></div></section>}

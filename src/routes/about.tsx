@@ -1,0 +1,15 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Building2, Home, Ruler } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useSite } from "@/components/site-shell";
+import sanitaryImage from "@/assets/category-sanitary.jpg";
+
+export const Route = createFileRoute("/about")({
+  head: () => ({ meta: [{ title: "About Sanoori Trading" }, { name: "description", content: "Learn what Sanoori Trading supplies and who it serves in Bangladesh." }, { property: "og:title", content: "About Sanoori Trading" }, { property: "og:description", content: "Sanitary ware, tiles, and building materials for customers and projects in Bangladesh." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:url", content: "/about" }], links: [{ rel: "canonical", href: "/about" }] }),
+  component: AboutPage,
+});
+
+function AboutPage() {
+  const { language } = useSite(); const bn = language === "bn";
+  return <><section className="section-shell grid gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:items-center"><div><p className="eyebrow">{bn ? "আমাদের সম্পর্কে" : "About us"}</p><h1 className="page-title mt-4">Sanoori Trading</h1><p className="mt-7 max-w-xl text-lg leading-8 text-muted-foreground">{bn ? "বাড়ি, ভবন ও নির্মাণ প্রকল্পের জন্য স্যানিটারি ওয়্যার, টাইলস এবং বিল্ডিং ম্যাটেরিয়ালস সরবরাহ করে।" : "Supplies sanitary ware, tiles, and building materials for homes, buildings, and construction projects."}</p><p className="mt-5 max-w-xl leading-8 text-muted-foreground">{bn ? "আমাদের লক্ষ্য হলো পণ্য দেখা, বোঝা এবং প্রয়োজন নিয়ে কথা বলার প্রক্রিয়াটি সহজ করা।" : "Our aim is to make it easier to see products, understand the available information, and discuss what your project needs."}</p><Button asChild variant="gold" size="lg" className="mt-8"><Link to="/products">{bn ? "পণ্য দেখুন" : "Browse Products"}<ArrowRight /></Link></Button></div><div className="relative min-h-[28rem] overflow-hidden border border-border"><img src={sanitaryImage} alt="Contemporary sanitary ware interior" width={960} height={1200} className="absolute inset-0 size-full object-cover" /></div></section><section className="border-y border-border bg-secondary"><div className="section-shell py-16 sm:py-20"><p className="eyebrow">{bn ? "যাদের জন্য" : "Who we serve"}</p><div className="mt-8 grid gap-px bg-border md:grid-cols-3">{[{Icon:Home,en:"Homeowners & families",bn:"বাড়ির মালিক ও পরিবার"},{Icon:Ruler,en:"Architects & designers",bn:"স্থপতি ও ডিজাইনার"},{Icon:Building2,en:"Builders & project buyers",bn:"নির্মাতা ও প্রকল্প ক্রেতা"}].map(({Icon,en,bn:label})=><div key={en} className="bg-background p-8"><Icon className="size-7 text-gold"/><h2 className="mt-6 font-display text-2xl font-semibold">{bn?label:en}</h2></div>)}</div></div></section></>;
+}
