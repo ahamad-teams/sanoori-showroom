@@ -127,6 +127,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
       document.documentElement.classList.add("dark");
     }
   }, []);
+  useEffect(() => {
+    document.documentElement.lang = language === "bn" ? "bn" : "en";
+  }, [language]);
   const setLanguage = (next: Language) => {
     setLanguageState(next);
     document.documentElement.lang = next === "bn" ? "bn" : "en";
