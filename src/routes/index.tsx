@@ -38,7 +38,7 @@ function HomePage() {
         <div className="section-shell relative flex min-h-[calc(100svh-4.5rem)] items-center py-16">
           <div className="max-w-3xl">
             <p className="eyebrow">Sanoori Trading</p>
-            <h1 className="display-title mt-5 max-w-3xl">{bn ? "স্যানিটারি ওয়্যার, টাইলস ও বিল্ডিং ম্যাটেরিয়ালস" : "Sanitary Ware, Tiles & Building Materials"}</h1>
+            <h1 className={`display-title mt-5 max-w-3xl ${bn ? "text-[2.7rem] leading-[1.15] sm:text-6xl" : ""}`}>{bn ? "স্যানিটারি ওয়্যার, টাইলস ও বিল্ডিং ম্যাটেরিয়ালস" : "Sanitary Ware, Tiles & Building Materials"}</h1>
             <p className="mt-6 max-w-xl text-base leading-8 text-hero-foreground/85 sm:text-lg">{bn ? "আপনার বাড়ি, ভবন ও নির্মাণকাজের জন্য প্রয়োজনীয় পণ্য।" : "Quality products for your home, building, and project needs."}</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row"><Button asChild variant="hero" size="lg"><Link to="/contact">{t.common.contact}<ArrowRight /></Link></Button><Button asChild variant="heroOutline" size="lg"><Link to="/products">{t.common.browse}</Link></Button></div>
           </div>

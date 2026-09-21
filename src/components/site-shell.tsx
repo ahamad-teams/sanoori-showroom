@@ -40,15 +40,17 @@ function LanguageSwitcher({ language, setLanguage }: Pick<SiteContextValue, "lan
   return (
     <div className="flex h-11 items-center border border-border bg-background p-1" aria-label="Language">
       {(["en", "bn"] as const).map((item) => (
-        <button
+        <Button
           key={item}
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setLanguage(item)}
           aria-pressed={language === item}
-          className="h-9 min-w-11 px-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-9 min-h-9 min-w-11 rounded-none px-2 text-sm text-muted-foreground shadow-none hover:translate-y-0 hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground"
         >
           {item === "en" ? "EN" : "বাংলা"}
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -120,11 +122,25 @@ export function SiteShell({ children }: { children: ReactNode }) {
     const savedLanguage = window.localStorage.getItem("sanoori-language");
     const savedTheme = window.localStorage.getItem("sanoori-theme");
     if (savedLanguage === "bn") setLanguageState("bn");
-    if (savedTheme === "dark") setTheme("dark");
+    if (savedTheme === "dark") {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+    }
   }, []);
-  useEffect(() => { document.documentElement.classList.toggle("dark", theme === "dark"); window.localStorage.setItem("sanoori-theme", theme); }, [theme]);
-  useEffect(() => { document.documentElement.lang = language === "bn" ? "bn" : "en"; window.localStorage.setItem("sanoori-language", language); }, [language]);
-  const setLanguage = (next: Language) => setLanguageState(next);
-  const value = { language, setLanguage, theme, toggleTheme: () => setTheme((current) => current === "light" ? "dark" : "light") };
+  useEffect(() => {
+    document.documentElement.lang = language === "bn" ? "bn" : "en";
+  }, [language]);
+  const setLanguage = (next: Language) => {
+    setLanguageState(next);
+    document.documentElement.lang = next === "bn" ? "bn" : "en";
+    window.localStorage.setItem("sanoori-language", next);
+  };
+  const toggleTheme = () => setTheme((current) => {
+    const next = current === "light" ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", next === "dark");
+    window.localStorage.setItem("sanoori-theme", next);
+    return next;
+  });
+  const value = { language, setLanguage, theme, toggleTheme };
   return <SiteContext.Provider value={value}><a href="#main-content" className="skip-link">Skip to content</a><Header {...value} /><main id="main-content">{children}</main><Footer language={language} /></SiteContext.Provider>;
 }
